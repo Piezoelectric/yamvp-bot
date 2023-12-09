@@ -1,40 +1,55 @@
 import pytesseract
-from PIL import ImageGrab
-import re
+from PIL import ImageGrab, ImageEnhance
+import re, time
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-# char_whitelist = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890: %@#~>"
+class MvpBot:
 
+    def __init__(self):
+        # TODO: use dotenv
+        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        # tesseract_config = '--psm 6'
+        self.tesseract_config = ''
+        self.BBOX = (0, 290, 500, 470)
 
-# tesseract_config = '--psm 6'
-tesseract_config = ''
-bbox = (0, 290, 500, 470)
-screenshot = ImageGrab.grab(bbox)
-# screenshot.show()
+        self.MVP_PATTERN = r"mvp"
+        self.CH_PATTERN = r"c[ch] *(\d{1,2})"
+        self.TIME_PATTERN = r"xx[: ]*(\d{2})"
 
-capture_string = pytesseract.image_to_string(screenshot, config=tesseract_config)
+        self.delay = 5
 
-clean_string = re.sub(r'\n(?!\[)', '', capture_string)
+    def capture(self):
+        screenshot = ImageGrab.grab(self.BBOX)
+        desaturate = ImageEnhance.Color(screenshot)
+        screenshot = desaturate.enhance(0.0)
+        contrast = ImageEnhance.Contrast(screenshot)
+        screenshot = contrast.enhance(2.0)
+        self.capture_string = pytesseract.image_to_string(screenshot, config=self.tesseract_config)
+        
+    def clean_and_parse(self):
+        clean_string = re.sub(r'\n(?!\[)', '', self.capture_string)
 
-# print(capture_string)
-# print("cleaned")
+        for s in clean_string.splitlines():
+            s = s.lower()
+            print(s) 
 
-MVP_PATTERN = r"mvp"
-CH_PATTERN = r"c[ch] *(\d{1,2})"
-TIME_PATTERN = r"xx[: ]*(\d{2})"
+            # Find regex objects or None
+            mvp = re.search(self.MVP_PATTERN, s)
+            channel = re.search(self.CH_PATTERN, s)
+            time = re.search(self.TIME_PATTERN, s)
 
-for s in clean_string.splitlines():
-    s = s.lower()
-    print(s) # TODO: add debug flag for this
+            # TODO: Bound checking channel and time ints
+            if mvp and channel and time:
+                print("I found one!")
 
-    # Find regex objects or None
-    mvp = re.search(MVP_PATTERN, s)
-    channel = re.search(CH_PATTERN, s)
-    time = re.search(TIME_PATTERN, s)
+    def run(self):
+        while True:
+            self.capture()
+            self.clean_and_parse()
+            time.sleep(self.delay)
 
-    # TODO: Bound checking channel and time ints
-    if mvp and channel and time:
-        print("I found one!")
+if __name__ == '__main__':
+    b = MvpBot()
+    b.run()
 
 # notes to self
 # bot process
