@@ -1,7 +1,6 @@
 import pytesseract
 from PIL import ImageGrab, ImageEnhance
-import re, time
-import discord
+import re
 
 class ImageParser:
 
