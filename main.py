@@ -26,8 +26,7 @@ async def on_ready():
     await bot.add_cog(mvp_commands_cog)
     synced = await bot.tree.sync()
     print(f'We have logged in as {bot.user}\n',
-          f'synced commands {[c.name for c in synced]}\n',
-          bot.get_cog('DefaultCommands').invite_link)
+          f'synced commands: {[c.name for c in synced]}\n')
 
 if __name__ == '__main__':
     bot.run(BOT_TOKEN)

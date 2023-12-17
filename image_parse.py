@@ -41,7 +41,12 @@ class ImageParser:
 
             # TODO: Bound checking channel and time ints
             if mvp and channel and time:
-                output.append(s)
+                #output.append([s, mvp, channel, time])
+                output.append({
+                    'msg': s,
+                    'channel': channel.group(0),
+                    'time': time.group(0)
+                })
 
         return output
 

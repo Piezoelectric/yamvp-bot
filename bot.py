@@ -18,7 +18,7 @@ class MvpCommands(commands.Cog):
     def __init__(self, bot, filepath, bbox, wait_time):
         self.bot = bot
         self.image_parser = ImageParser(filepath, bbox)
-        self.mvp_messages = {}
+        self.mvp_message_queue = {}
         self.wait_time = wait_time
     
     def cog_unload(self):
@@ -41,8 +41,27 @@ class MvpCommands(commands.Cog):
     @tasks.loop(seconds=5.0)
     async def mvp_task(self, ctx):
         self.image_parser.capture()
-        output = self.image_parser.clean_and_parse()
-        await ctx.send(output)
+        outputs = self.image_parser.clean_and_parse()
+
+        # Register mvp messages in the queue
+        # Avoid registering duplicates by using the message itself as a key
+        for output in outputs:
+            if output['msg'] not in self.mvp_message_queue.keys():
+                self.mvp_message_queue[output['msg']] = {
+                    'was_broadcast': False,
+                    'channel': output['channel'],
+                    'time': output['time']
+                }
+        
+        # Send mvp messages in the queue (and mark them as sent)
+        for mvp_msg, mvp_data in self.mvp_message_queue.items():
+            # await ctx.send(f'{mvp_msg}, {mvp_data["was_broadcast"]}')
+            if mvp_data['was_broadcast'] == False:
+                try:
+                    await ctx.send(f'MVP {mvp_data["channel"]} {mvp_data["time"]}')
+                    self.mvp_message_queue[mvp_msg]['was_broadcast'] = True
+                except Exception:
+                    pass
 
     @mvp_task.before_loop
     async def before_mvp_task(self):
