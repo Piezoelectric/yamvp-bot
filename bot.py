@@ -29,7 +29,7 @@ class MvpCommands(commands.Cog):
     @commands.hybrid_command()
     async def start_loop(self, ctx):
         await ctx.send('Starting the loop and printing to this channel')
-        self.cleanup_queue_task.start()
+        self.cleanup_queue_task.start(ctx)
         self.mvp_task.start(ctx)
 
     @commands.hybrid_command()
@@ -75,8 +75,9 @@ class MvpCommands(commands.Cog):
     # == additional garbage cleanup task == 
     
     @tasks.loop(minutes=15.0)
-    async def cleanup_queue_task(self):
+    async def cleanup_queue_task(self, ctx):
         self.mvp_message_queue = {}
+        await ctx.send("Healthcheck. If you haven't seen one of these messages in 30 minutes, let the bot owner know.")
 
     @cleanup_queue_task.before_loop
     async def before_cleanup_queue_task(self):
