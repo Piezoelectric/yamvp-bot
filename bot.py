@@ -24,19 +24,21 @@ class MvpCommands(commands.Cog):
     def cog_unload(self):
         self.mvp_task.cancel()
 
-    # == COMMANDS FOR REGISTERING THE TASK TO A CHANNEL ==
+    # == COMMANDS FOR REGISTERING THE MVP TASK TO A CHANNEL ==
 
     @commands.hybrid_command()
     async def start_loop(self, ctx):
         await ctx.send('Starting the loop and printing to this channel')
         self.mvp_task.start(ctx)
+        self.cleanup_queue_task.start()
 
     @commands.hybrid_command()
     async def cancel_loop(self, ctx):
         await ctx.send('Cancelling the loop')
         self.mvp_task.cancel()
+        self.cleanup_queue_task.cancel()
 
-    # == THE ACTUAL TASK ==
+    # == THE ACTUAL MVP TASK ==
 
     @tasks.loop(seconds=5.0)
     async def mvp_task(self, ctx):
@@ -65,5 +67,16 @@ class MvpCommands(commands.Cog):
 
     @mvp_task.before_loop
     async def before_mvp_task(self):
-        print('waiting to start task until bot is ready')
+        print('waiting to start mvp task until bot is ready')
+        await self.bot.wait_until_ready()
+
+    # == additional garbage cleanup task == 
+    
+    @tasks.loop(minutes=1.0)
+    async def cleanup_queue_task(self):
+        self.mvp_message_queue = {}
+
+    @cleanup_queue_task.before_loop
+    async def before_cleanup_queue_task(self):
+        print('waiting to start cleanup queue task until bot is ready')
         await self.bot.wait_until_ready()
