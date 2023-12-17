@@ -66,3 +66,7 @@ class ImageParser:
 #     (healthcheck: when did it write a txt msg)
 # * check if discord integration down (bot alive, can't post)
 #     (healthcheck: when was the bot's last msg in the discord channel)
+    
+# TODO list
+# * healthcheck stuff, as above
+# * create a better pip installation txt file... thing.
