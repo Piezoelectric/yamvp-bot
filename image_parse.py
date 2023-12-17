@@ -3,7 +3,7 @@ from PIL import ImageGrab, ImageEnhance
 import re, time
 import discord
 
-class MvpBot:
+class ImageParser:
 
     def __init__(self):
         # TODO: use dotenv
