@@ -3,15 +3,12 @@ from PIL import ImageGrab, ImageEnhance
 import re
 
 class ImageParser:
-
-    def __init__(self):
-        # TODO: use dotenv
-
+    def __init__(self, tesseract_filepath, bb):
         # screenshot and OCR config
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = rf'{tesseract_filepath}'
         # tesseract_config = '--psm 6'
         self.tesseract_config = ''
-        self.BBOX = (0, 290, 500, 470)
+        self.BBOX = bb
 
         # regex/parse config
         self.MVP_PATTERN = r"mvp"
@@ -20,8 +17,6 @@ class ImageParser:
         self.TIME_PATTERN = r"xx[: ]*(\d{2})"
         # revise to limit time range (no impossible hours)
         # maybe also revise logic: MVP and (CH or Time) 
-
-        self.delay = 5
 
     def capture(self):
         screenshot = ImageGrab.grab(self.BBOX)
