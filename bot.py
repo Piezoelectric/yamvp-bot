@@ -62,7 +62,7 @@ class MvpCommands(commands.Cog):
             # await ctx.send(f'{mvp_key}, {mvp_data}')
             if mvp_data['was_broadcast'] == False:
                 try:
-                    await ctx.send(f'MVP {mvp_data["channel"]} {mvp_data["time"]}')
+                    await ctx.send(f':regional_indicator_m::regional_indicator_v::regional_indicator_p: :satellite:**{mvp_data["channel"]}** :clock:**{mvp_data["time"]}**\n*{mvp_data["msg"]}*')
                     self.mvp_message_queue[mvp_key]['was_broadcast'] = True
                 except Exception:
                     pass
