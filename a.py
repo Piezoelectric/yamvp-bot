@@ -1,19 +1,26 @@
 import pytesseract
 from PIL import ImageGrab, ImageEnhance
 import re, time
+import discord
 
 class MvpBot:
 
     def __init__(self):
         # TODO: use dotenv
+
+        # screenshot and OCR config
         pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
         # tesseract_config = '--psm 6'
         self.tesseract_config = ''
         self.BBOX = (0, 290, 500, 470)
 
+        # regex/parse config
         self.MVP_PATTERN = r"mvp"
         self.CH_PATTERN = r"c[ch] *(\d{1,2})"
+        # TODO: revise to include "channel", limit ch range
         self.TIME_PATTERN = r"xx[: ]*(\d{2})"
+        # revise to limit time range (no impossible hours)
+        # maybe also revise logic: MVP and (CH or Time) 
 
         self.delay = 5
 
@@ -27,10 +34,11 @@ class MvpBot:
         
     def clean_and_parse(self):
         clean_string = re.sub(r'\n(?!\[)', '', self.capture_string)
+        output = []
 
         for s in clean_string.splitlines():
             s = s.lower()
-            print(s) 
+            # print(s) 
 
             # Find regex objects or None
             mvp = re.search(self.MVP_PATTERN, s)
@@ -39,17 +47,9 @@ class MvpBot:
 
             # TODO: Bound checking channel and time ints
             if mvp and channel and time:
-                print("I found one!")
+                output.append(s)
 
-    def run(self):
-        while True:
-            self.capture()
-            self.clean_and_parse()
-            time.sleep(self.delay)
-
-if __name__ == '__main__':
-    b = MvpBot()
-    b.run()
+        return output
 
 # notes to self
 # bot process
