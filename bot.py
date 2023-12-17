@@ -29,8 +29,8 @@ class MvpCommands(commands.Cog):
     @commands.hybrid_command()
     async def start_loop(self, ctx):
         await ctx.send('Starting the loop and printing to this channel')
-        self.mvp_task.start(ctx)
         self.cleanup_queue_task.start()
+        self.mvp_task.start(ctx)
 
     @commands.hybrid_command()
     async def cancel_loop(self, ctx):
@@ -46,22 +46,24 @@ class MvpCommands(commands.Cog):
         outputs = self.image_parser.clean_and_parse()
 
         # Register mvp messages in the queue
-        # Avoid registering duplicates by using the message itself as a key
+        # Avoid registering duplicates by using channel+time as key
         for output in outputs:
-            if output['msg'] not in self.mvp_message_queue.keys():
-                self.mvp_message_queue[output['msg']] = {
+            key = f'{output["channel"]}{output["time"]}'
+            if key not in self.mvp_message_queue.keys():
+                self.mvp_message_queue[key] = {
                     'was_broadcast': False,
                     'channel': output['channel'],
-                    'time': output['time']
+                    'time': output['time'],
+                    'msg': output['msg']
                 }
         
         # Send mvp messages in the queue (and mark them as sent)
-        for mvp_msg, mvp_data in self.mvp_message_queue.items():
-            # await ctx.send(f'{mvp_msg}, {mvp_data["was_broadcast"]}')
+        for mvp_key, mvp_data in self.mvp_message_queue.items():
+            # await ctx.send(f'{mvp_key}, {mvp_data}')
             if mvp_data['was_broadcast'] == False:
                 try:
                     await ctx.send(f'MVP {mvp_data["channel"]} {mvp_data["time"]}')
-                    self.mvp_message_queue[mvp_msg]['was_broadcast'] = True
+                    self.mvp_message_queue[mvp_key]['was_broadcast'] = True
                 except Exception:
                     pass
 
@@ -72,7 +74,7 @@ class MvpCommands(commands.Cog):
 
     # == additional garbage cleanup task == 
     
-    @tasks.loop(minutes=1.0)
+    @tasks.loop(minutes=15.0)
     async def cleanup_queue_task(self):
         self.mvp_message_queue = {}
 
