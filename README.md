@@ -21,3 +21,7 @@ For running your own instance of YAMvp Bot. (Instructions are WIP.)
   * `PIL`
 3. Create and fill out a `.env` file.
 4. Run `python main.py`
+
+# Further reading
+
+https://muthu.co/all-tesseract-ocr-options/
