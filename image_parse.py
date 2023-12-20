@@ -14,7 +14,7 @@ class ImageParser:
         self.MVP_PATTERN = r"mvp"
         self.CH_PATTERN = r"c[ch]?(an)?(nel)?[ .]*\d{1,2}"
         # hopefully this should account for c, cc, ch, chan, and channel.
-        self.TIME_PATTERN = r"xx[: ]*(\d{1,2})"
+        self.TIME_PATTERN = r"x{1,2}[: ]*(\d{1,2})"
 
     def capture(self):
         screenshot = ImageGrab.grab(self.BBOX)
