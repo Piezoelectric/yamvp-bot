@@ -12,11 +12,9 @@ class ImageParser:
 
         # regex/parse config
         self.MVP_PATTERN = r"mvp"
-        self.CH_PATTERN = r"c[ch] *(\d{1,2})"
-        # TODO: revise to include "channel", limit ch range
-        self.TIME_PATTERN = r"xx[: ]*(\d{2})"
-        # revise to limit time range (no impossible hours)
-        # maybe also revise logic: MVP and (CH or Time) 
+        self.CH_PATTERN = r"c[ch]?(an)?(nel)?[ .]*\d{1,2}"
+        # hopefully this should account for c, cc, ch, chan, and channel.
+        self.TIME_PATTERN = r"xx[: ]*(\d{1,2})"
 
     def capture(self):
         screenshot = ImageGrab.grab(self.BBOX)
@@ -40,7 +38,7 @@ class ImageParser:
             time = re.search(self.TIME_PATTERN, s)
 
             # TODO: Bound checking channel and time ints
-            if mvp and channel and time:
+            if mvp and (channel or time):
                 #output.append([s, mvp, channel, time])
                 output.append({
                     'msg': s,
@@ -68,5 +66,6 @@ class ImageParser:
 #     (healthcheck: when was the bot's last msg in the discord channel)
     
 # TODO list
-# * healthcheck stuff, as above
+# * fix the invite link to be not hardcoded.
 # * create a better pip installation txt file... thing.
+# * healthcheck stuff listed above

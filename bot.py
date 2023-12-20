@@ -62,7 +62,7 @@ class MvpCommands(commands.Cog):
             # await ctx.send(f'{mvp_key}, {mvp_data}')
             if mvp_data['was_broadcast'] == False:
                 try:
-                    await ctx.send(f':regional_indicator_m::regional_indicator_v::regional_indicator_p: :satellite:**{mvp_data["channel"]}** :clock:**{mvp_data["time"]}**\n*{mvp_data["msg"]}*')
+                    await ctx.send(f':regional_indicator_m::regional_indicator_v::regional_indicator_p: :satellite:**{mvp_data["channel"]}** :clock:**{mvp_data["time"]}**\n\n*{mvp_data["msg"]}*')
                     self.mvp_message_queue[mvp_key]['was_broadcast'] = True
                 except Exception:
                     pass
@@ -74,10 +74,10 @@ class MvpCommands(commands.Cog):
 
     # == additional garbage cleanup task == 
     
-    @tasks.loop(minutes=15.0)
+    @tasks.loop(hours=3.0)
     async def cleanup_queue_task(self, ctx):
         self.mvp_message_queue = {}
-        await ctx.send("Healthcheck. If you haven't seen one of these messages in 30 minutes, let the bot owner know.")
+        await ctx.send("Healthcheck. If you haven't seen one of these messages in six hours, let the bot owner know.")
 
     @cleanup_queue_task.before_loop
     async def before_cleanup_queue_task(self):
