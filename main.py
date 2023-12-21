@@ -27,7 +27,5 @@ async def on_ready():
     print(f'We have logged in as {bot.user} with id {bot.user.id}\n',
           f'synced commands: {[c.name for c in synced]}\n')
 
-    bot.get_cog("MvpCommands").start_mvp_loop()
-
 if __name__ == '__main__':
     bot.run(BOT_TOKEN)

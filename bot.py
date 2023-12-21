@@ -26,10 +26,10 @@ class MvpCommands(commands.Cog):
         self.mvp_message_queue = {}
         self.registered_channels = set()
 
-    def start_mvp_loop(self):
+    def cog_load(self):
         self.cleanup_queue_task.start()
         self.mvp_task.start()
-        self.debug_task.start()
+        # self.debug_task.start()
     
     def cog_unload(self):
         self.mvp_task.cancel()
@@ -107,6 +107,7 @@ class MvpCommands(commands.Cog):
 
     # == debug task ==
         
-    @tasks.loop(seconds=30.0)
+    @tasks.loop(seconds=5.0)
     async def debug_task(self):
-        print(self.registered_channels)
+        # print(self.registered_channels)
+        pass 
