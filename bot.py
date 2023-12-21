@@ -1,18 +1,21 @@
 from discord.ext import tasks, commands
 from image_parse import ImageParser
 
+BASE_URI = 'https://discord.com/api/oauth2/authorize?client_id='
+PERMISSIONS_STRING = '&permissions=2048&scope=bot+applications.commands'
+
 class DefaultCommands(commands.Cog):
-    def __init__(self, bot, inv_l):
+    def __init__(self, bot):
         self.bot = bot
-        self.invite_link = inv_l
 
     @commands.hybrid_command()
     async def test(self, ctx):
-        await ctx.send("respondse")
+        await ctx.send("response")
     
     @commands.hybrid_command()
     async def invite(self, ctx):
-        await ctx.send(f'Invite me to your server: {self.invite_link}')
+        self.client_id = self.bot.user.id # uhh hopefully this works
+        await ctx.send(f'Invite me to your server: {BASE_URI}{self.client_id}{PERMISSIONS_STRING}')
 
 class MvpCommands(commands.Cog):
     def __init__(self, bot, filepath, bbox, wait_time):

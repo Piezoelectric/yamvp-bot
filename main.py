@@ -11,9 +11,8 @@ bot = commands.Bot(command_prefix='$', intents=intents)
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-INVITE_LINK = 'https://discord.com/api/oauth2/authorize?client_id=728785529679773758&permissions=2048&scope=bot+applications.commands'
 
-default_commands_cog = DefaultCommands(bot, INVITE_LINK)
+default_commands_cog = DefaultCommands(bot)
 
 TESSERACT_FILEPATH = os.getenv('TESSERACT_FILEPATH')
 BBOX = tuple([int(a) for a in os.getenv('CAPTURE_REGION').split(',')])
@@ -25,7 +24,7 @@ async def on_ready():
     await bot.add_cog(default_commands_cog)
     await bot.add_cog(mvp_commands_cog)
     synced = await bot.tree.sync()
-    print(f'We have logged in as {bot.user}\n',
+    print(f'We have logged in as {bot.user} with id {bot.user.id}\n',
           f'synced commands: {[c.name for c in synced]}\n')
 
 if __name__ == '__main__':
