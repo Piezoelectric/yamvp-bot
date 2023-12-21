@@ -30,7 +30,7 @@ class ImageParser:
 
         for s in clean_string.splitlines():
             s = s.lower()
-            # print(s) 
+            print(s) 
 
             # Find regex objects or None
             mvp = re.search(self.MVP_PATTERN, s)

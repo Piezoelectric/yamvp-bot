@@ -44,17 +44,19 @@ class MvpCommands(commands.Cog):
     @commands.hybrid_command()
     async def register_channel(self, ctx):
         await ctx.send('The MVP bot will now print to this channel')
+        print(f"Registered: {ctx.channel.id}")
         self.registered_channels.add(ctx.channel)
 
     @commands.hybrid_command()
     async def unregister_channel(self, ctx):
         await ctx.send('The MVP bot will **not** print to this channel')
+        print(f"Unregistered: {ctx.channel.id}")
         self.registered_channels.discard(ctx.channel)
 
 
     # == THE ACTUAL MVP TASK ==
 
-    @tasks.loop(seconds=5.0)
+    @tasks.loop(seconds=20.0)
     async def mvp_task(self):
         self.image_parser.capture()
         outputs = self.image_parser.clean_and_parse()
