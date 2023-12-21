@@ -17,7 +17,7 @@ default_commands_cog = DefaultCommands(bot)
 TESSERACT_FILEPATH = os.getenv('TESSERACT_FILEPATH')
 BBOX = tuple([int(a) for a in os.getenv('CAPTURE_REGION').split(',')])
 
-mvp_commands_cog = MvpCommands(bot, TESSERACT_FILEPATH, BBOX, 5)
+mvp_commands_cog = MvpCommands(bot, TESSERACT_FILEPATH, BBOX)
 
 @bot.event
 async def on_ready():
@@ -26,6 +26,8 @@ async def on_ready():
     synced = await bot.tree.sync()
     print(f'We have logged in as {bot.user} with id {bot.user.id}\n',
           f'synced commands: {[c.name for c in synced]}\n')
+
+    bot.get_cog("MvpCommands").start_mvp_loop()
 
 if __name__ == '__main__':
     bot.run(BOT_TOKEN)
