@@ -16,7 +16,10 @@ could be both
     (healthcheck: when was the bot's last msg in the discord channel)
     
 ## TODO list
-* fix the invite link to be not hardcoded.
-* fix deleting messages (get channel from context instead of reusing context)
+* ~~fix the invite link to be not hardcoded.~~
+* ~~fix deleting messages (get channel from context instead of reusing context)~~
+* get the thing to send image/screenshots
+* blocklist certain symbols (registered logo ®, degree, pipe |, ™, ©)
 * create a better pip installation txt file... thing.
+* optional location checks (shrine, leafre, henesys, odium?)
 * healthcheck stuff listed above

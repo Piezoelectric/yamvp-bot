@@ -82,7 +82,8 @@ class MvpCommands(commands.Cog):
                     'was_broadcast': False,
                     'channel': output['channel'],
                     'time': output['time'],
-                    'msg': output['msg']
+                    'msg': output['msg'],
+                    'location': output['location']
                 }
 
     async def broadcast_to_channels(self):

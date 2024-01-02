@@ -11,10 +11,13 @@ class ImageParser:
         self.BBOX = bb
 
         # regex/parse config
-        self.MVP_PATTERN = r"mvp"
-        self.CH_PATTERN = r"c[ch]?(an)?(nel)?[ .]*\d{1,2}"
+        self.MVP_PATTERN = r"(mvp|alicia.*bless)"
+        self.CH_PATTERN = r"c[ch]?(an)?(nel)?[ \.]*\d{1,2}"
         # hopefully this should account for c, cc, ch, chan, and channel.
-        self.TIME_PATTERN = r"x{1,2}[: ]*(\d{1,2})"
+        self.TIME_PATTERN = r"xx[: ]*(\d{1,2})"
+
+        self.LOCATION_PATTERN = r"(shrine|mush|ms|hene|lith|leafre)"
+        # optional: location of the MVP pop
 
     def capture(self):
         screenshot = ImageGrab.grab(self.BBOX)
@@ -36,6 +39,7 @@ class ImageParser:
             mvp = re.search(self.MVP_PATTERN, s)
             channel = re.search(self.CH_PATTERN, s)
             time = re.search(self.TIME_PATTERN, s)
+            location = re.search(self.LOCATION_PATTERN, s)
 
             # TODO: Bound checking channel and time ints
             if mvp and (channel or time):
@@ -43,7 +47,8 @@ class ImageParser:
                 output.append({
                     'msg': s,
                     'channel': channel.group(0) if channel else "couldn't parse",
-                    'time': time.group(0) if time else "couldn't parse"
+                    'time': time.group(0) if time else "couldn't parse",
+                    'location': location.group(0) if location else ''
                 })
 
         return output
